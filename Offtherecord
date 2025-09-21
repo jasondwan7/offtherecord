@@ -4,231 +4,89 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Off the Record — Where the night belongs to the moment.</title>
-  <meta name="description" content="Off the Record — exclusive, phone-free nightlife events. Tickets, countdown, and guest list.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0a0b0f;
-      --panel:#0f1118;
-      --ink:#ffffff;
-      --muted:#c9c9d2;
-      --accent:#5aa6ff; /* neon blue */
-      --btn-shadow:0 0 16px rgba(90,166,255,.45), 0 0 40px rgba(90,166,255,.2);
+      --bg:#0a0a0f;
+      --card:#101018;
+      --ink:#f2f2f7;
+      --muted:#a8a8b3;
+      --accent:#4aa3ff;
+      --accent-2:#ff4ad8;
+      --glow: 0 0 24px rgba(74,163,255,.45), 0 0 48px rgba(74,163,255,.25);
     }
     *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;line-height:1.55}
 
     /* NAV */
-    .nav{position:sticky;top:0;z-index:50;background:rgba(10,11,15,.6);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
-    .nav .inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-    .brand{font-weight:800;letter-spacing:.6px;display:flex;align-items:center;gap:10px}
-    .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:var(--btn-shadow)}
-    .menu{display:flex;gap:20px;flex-wrap:wrap}
-    .menu a{opacity:.88}
-    .menu a:hover{opacity:1}
+    .nav{
+      position:sticky;top:0;z-index:999;
+      backdrop-filter: blur(10px);
+      background:linear-gradient(to bottom, rgba(10,10,15,.9), rgba(10,10,15,.5));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav .inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
+    .brand .logo{height:40px;width:auto;display:block}
+    .brand-text{white-space:nowrap}
+    .menu{display:flex;gap:18px;flex-wrap:wrap}
+    .menu a{color:var(--ink);opacity:.85;text-decoration:none}
+    .menu a:hover{opacity:1;text-decoration:none}
 
     /* HERO */
-    .hero{
-      position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;
-      background:
-        radial-gradient(60% 70% at 50% 0%, rgba(90,166,255,.18), transparent 60%),
-        radial-gradient(40% 40% at 85% 75%, rgba(255,80,210,.12), transparent 60%),
-        linear-gradient(180deg, #0a0b10, #0b0d14);
-      overflow:hidden;
-    }
-    .hero::before{
-      /* subtle vignette */
-      content:"";position:absolute;inset:0;background:radial-gradient(1200px 500px at 50% 0%, transparent, rgba(0,0,0,.5));pointer-events:none
-    }
-    .hero h1{
-      font-size:clamp(48px, 9vw, 120px);
-      line-height:0.95;
-      font-weight:900;
-      margin:0 0 10px;
-      letter-spacing:.02em;
-      text-transform:uppercase;
-    }
-    .hero .sub{font-size:clamp(16px,2vw,22px);color:#e6e6ef;margin:0 0 32px;opacity:.95}
-    .count{
-      display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin:0 auto 28px;
-    }
-    .slot{
-      width:120px;background:linear-gradient(180deg,#11131c,#0e1018);border:1px solid rgba(255,255,255,.08);
-      border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4);
-      padding:14px 10px 10px
-    }
-    .num{display:block;font-weight:900;font-size:44px;letter-spacing:.03em}
-    .lab{display:block;font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:.12em;text-transform:uppercase}
-    .cta{
-      display:inline-block;margin-top:8px;background:linear-gradient(180deg, var(--accent), #3e8df5);
-      color:#fff;padding:14px 22px;border-radius:12px;font-weight:800;letter-spacing:.04em;
-      box-shadow:var(--btn-shadow)
-    }
-    .cta:hover{transform:translateY(-1px)}
-    .hero .next{font-size:12px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+    .hero{min-height:80vh;display:flex;align-items:center;justify-content:center;text-align:center}
+    .headline{font-size:clamp(32px, 5vw, 72px);font-weight:800;margin:0 0 10px}
+    .tagline{font-size:clamp(16px,2.2vw,22px);color:var(--muted);margin:0 0 24px}
 
-    /* SPLIT SECTION (about) */
-    section{padding:72px 0;border-top:1px solid rgba(255,255,255,.06)}
-    h2{font-size:clamp(20px,3.4vw,34px);margin:0 0 10px;letter-spacing:.08em;text-transform:uppercase}
-    p.lead{color:#d0d0d9;max-width:860px}
-    .split{display:grid;gap:28px}
-    @media (min-width: 980px){ .split{grid-template-columns: 1.15fr .85fr} }
-    .imagePane{
-      background:
-        radial-gradient(50% 60% at 30% 20%, rgba(90,166,255,.18), transparent 60%),
-        url('https://images.unsplash.com/photo-1526481280698-8fcc13fd4b7e?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
-      border-radius:14px;min-height:340px;border:1px solid rgba(255,255,255,.08);overflow:hidden;
-      position:relative
+    /* Buttons */
+    .btn{
+      background:linear-gradient(180deg, rgba(74,163,255,.95), rgba(74,163,255,.85));
+      color:white;border:0;border-radius:10px;padding:12px 18px;font-weight:700;
+      box-shadow:var(--glow);cursor:pointer;transition:transform .08s ease;
+      display:inline-block;
     }
-    .imagePane::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.4), rgba(0,0,0,0))}
-    .panel{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px}
-
-    /* NEXT EXPERIENCE */
-    .experience{display:grid;gap:28px}
-    @media (min-width: 980px){ .experience{grid-template-columns: 1fr 1fr} }
-    .bigTitle{font-size:14px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:22px 0 8px}
-    .expTitle{font-size:clamp(28px,5vw,44px);font-weight:900;letter-spacing:.02em;margin:0 0 8px}
-    .expCard{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px}
-    .expImg{
-      border-radius:14px;border:1px solid rgba(255,255,255,.08);min-height:320px;
-      background:
-        radial-gradient(60% 60% at 70% 30%, rgba(255,80,210,.16), transparent 60%),
-        url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
-      filter:saturate(.9) blur(1px);
-    }
-
-    /* GUEST LIST */
-    .center{ text-align:center }
-    .guestWrap{max-width:720px;margin:0 auto}
-    .field{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:#0c0e14;color:#fff}
-
-    /* FOOTER */
-    footer{padding:46px 0;text-align:center;color:#aeb0bd;border-top:1px solid rgba(255,255,255,.06)}
-    .tiny{font-size:12px}
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--ink)}
+    .btn:active{transform:translateY(1px)}
   </style>
 </head>
 <body>
+  <!-- NAV -->
   <nav class="nav">
-    <div class="wrap inner">
-      <div class="brand"><img src="otr-website.png" alt="Off the Record Logo" style="height:42px;width:auto;"> Off the Record</div>
+    <div class="inner">
+      <div class="brand">
+        <!-- Replace otr-logo.png with your actual file name if different -->
+        <img src="otr-logo.png" alt="Off the Record Logo" class="logo">
+        <span class="brand-text">Off the Record</span>
+      </div>
       <div class="menu">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#guest">Guest List</a>
+        <a href="#events">Events</a>
         <a href="#tickets">Tickets</a>
+        <a href="#newsletter">Newsletter</a>
+        <a href="#contact">Contact</a>
       </div>
     </div>
   </nav>
 
+  <!-- HERO -->
   <header id="home" class="hero">
-    <div class="wrap">
-      <h1>OFF THE RECORD</h1>
-      <p class="sub">Where the night belongs to the moment.</p>
-      <div class="next">Next Event</div>
-      <div id="count" class="count" data-target="2025-09-19T22:00:00-04:00">
-        <div class="slot" data-key="days"><span class="num">000</span><span class="lab">Days</span></div>
-        <div class="slot" data-key="hours"><span class="num">00</span><span class="lab">Hours</span></div>
-        <div class="slot" data-key="minutes"><span class="num">00</span><span class="lab">Minutes</span></div>
-        <div class="slot" data-key="seconds"><span class="num">00</span><span class="lab">Seconds</span></div>
-      </div>
-      <a class="cta" href="#tickets">GET TICKETS</a>
+    <div>
+      <h1 class="headline">Off the Record</h1>
+      <p class="tagline">Where the night belongs to the moment.</p>
+      <a href="#tickets" class="btn">Get Tickets</a>
     </div>
   </header>
 
-  <section id="about">
-    <div class="wrap split">
-      <div class="imagePane" role="img" aria-label="Guests enjoying cocktails in a moody room"></div>
-      <div class="panel">
-        <h2>No phones, no distractions — just music, cocktails, and presence.</h2>
-        <p class="lead">Off the Record is a secretive nightlife experience where every event feels like stepping into another world. We build immersive nights with signature cocktails, curated sound, and a strict phone-free ethos.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="experience">
-    <div class="wrap experience">
-      <div class="expCard">
-        <div class="bigTitle">Next Experience:</div>
-        <h3 class="expTitle">“AIRPLANE MODE”</h3>
-        <p>Friday, Sept 19 — 10 PM | NYC<br/>Limited tickets available.</p>
-        <p>“Airplane Mode” is an immersion into presence. Neon glows, deep cuts, and a cocktail menu designed for lift‑off.</p>
-        <a class="cta" href="#tickets">BOOK NOW</a>
-      </div>
-      <div class="expImg" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <section id="guest">
-    <div class="wrap center guestWrap">
-      <h2>Join the Guest List</h2>
-      <p class="lead">Get exclusive invites, first access to tickets, and insider updates.</p>
-      <form id="guest-form" action="https://formspree.io/f/your_form_id" method="POST">
-        <input class="field" type="email" name="email" required placeholder="you@email.com" />
-        <button class="cta" style="margin-top:12px" type="submit">SIGN UP</button>
-      </form>
-    </div>
-  </section>
-
-  <section id="tickets">
-    <div class="wrap center">
-      <h2>Tickets</h2>
-      <p class="lead">Secure checkout hosted by our ticketing partner.</p>
-      <p><a class="cta" href="https://posh.vip/e/off-the-record-" target="_blank" rel="noopener">BUY ON POSH</a></p>
-      <p class="tiny" style="color:#aeb0bd">Replace this link with your provider (Eventbrite, Ticket Tailor, Universe) if needed.</p>
-    </div>
-  </section>
-
-  <footer>
-    <div class="wrap">
-      <img src="otr-website.png" alt="Off the Record Logo" style="height:36px;width:auto;display:block;margin:0 auto 10px;">© <span id="year"></span> Off the Record · <span class="tiny">Privacy · Terms</span>
-    </div>
+  <!-- FOOTER -->
+  <footer style="padding:20px;text-align:center;color:var(--muted)">
+    © <span id="year"></span> Off the Record
   </footer>
 
   <script>
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const id=a.getAttribute('href').slice(1), el=document.getElementById(id);
-        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
-      });
-    });
-
-    // Year
-    document.getElementById('year').textContent=new Date().getFullYear();
-
-    // Countdown to target
-    const wrap=document.getElementById('count');
-    const target=new Date(wrap.getAttribute('data-target')).getTime();
-    const pad=(n,l=2)=>String(n).padStart(l,'0');
-    function setNum(key,val){
-      const el = wrap.querySelector('[data-key="'+key+'"] .num');
-      if(el.textContent!==val){ el.textContent=val; }
-    }
-    function tick(){
-      const now=Date.now(); let diff=Math.max(0,target-now);
-      const d=Math.floor(diff/86400000); diff-=d*86400000;
-      const h=Math.floor(diff/3600000); diff-=h*3600000;
-      const m=Math.floor(diff/60000); diff-=m*60000;
-      const s=Math.floor(diff/1000);
-      setNum('days', pad(d,3));
-      setNum('hours', pad(h));
-      setNum('minutes', pad(m));
-      setNum('seconds', pad(s));
-    }
-    tick(); setInterval(tick,1000);
-
-    // Prevent publishing with placeholder form action
-    document.getElementById('guest-form').addEventListener('submit', function(e){
-      if(this.action.includes('your_form_id')){
-        e.preventDefault();
-        alert('Replace the form action with your Formspree or Mailchimp endpoint before publishing.');
-      }
-    });
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
