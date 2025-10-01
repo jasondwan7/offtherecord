@@ -1,645 +1,77 @@
 // FILE: package.json
 {
-  "name": "off-the-record-site",
-  "private": true,
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "14.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "framer-motion": "11.0.10",
-    "clsx": "2.1.1"
-  },
-  "devDependencies": {
-    "typescript": "5.5.4",
-    "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5",
-    "tailwindcss": "3.4.10",
-    "postcss": "8.4.47",
-    "autoprefixer": "10.4.20"
-  }
+"name": "off-the-record-site",
+"private": true,
+"version": "1.0.0",
+"scripts": {
+"dev": "next dev",
+"build": "next build",
+"start": "next start",
+"lint": "next lint"
+},
+"dependencies": {
+"next": "14.2.5",
+"react": "18.2.0",
+"react-dom": "18.2.0",
+"framer-motion": "11.0.10",
+"clsx": "2.1.1"
+},
+"devDependencies": {
+"typescript": "5.5.4",
+"eslint": "8.57.0",
+"eslint-config-next": "14.2.5",
+"tailwindcss": "3.4.10",
+"postcss": "8.4.47",
+"autoprefixer": "10.4.20"
 }
+}
+
+
+
 
 // FILE: next.config.mjs
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb'
-    }
-  }
+experimental: {
+serverActions: {
+bodySizeLimit: '2mb'
+}
+}
 };
 export default nextConfig;
 
+
+
+
 // FILE: tsconfig.json
 {
-  "compilerOptions": {
-    "target": "ES2021",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "paths": {"@/*": ["./*"]}
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+"compilerOptions": {
+"target": "ES2021",
+"lib": ["dom", "dom.iterable", "esnext"],
+"allowJs": false,
+"skipLibCheck": true,
+"strict": true,
+"noEmit": true,
+"esModuleInterop": true,
+"module": "esnext",
+"moduleResolution": "bundler",
+"resolveJsonModule": true,
+"isolatedModules": true,
+"jsx": "preserve",
+"incremental": true,
+"paths": {"@/*": ["./*"]}
+},
+"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+"exclude": ["node_modules"]
 }
+
+
+
 
 // FILE: postcss.config.js
 module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
+plugins: {
+tailwindcss: {},
+autoprefixer: {},
+},
 };
-
-// FILE: tailwind.config.ts
-import type { Config } from 'tailwindcss'
-
-const config: Config = {
-  content: [
-    './app/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        bg: '#0A0A0B',
-        'accent-1': '#8A2BE2', // electric violet
-        'accent-2': '#00E5FF', // cyber teal
-        'accent-3': '#FF2D95', // neon magenta
-      },
-      boxShadow: {
-        glow: '0 0 24px rgba(138,43,226,0.35)',
-        glow2: '0 0 24px rgba(0,229,255,0.35)',
-      },
-      backgroundImage: {
-        noise: "url('/textures/noise.png')",
-        grid: "radial-gradient(circle at 50% 0, rgba(255,45,149,0.20), transparent 50%), radial-gradient(circle at 0 100%, rgba(0,229,255,0.15), transparent 40%), radial-gradient(circle at 100% 100%, rgba(138,43,226,0.18), transparent 45%)"
-      },
-      fontFamily: {
-        sans: ['ui-sans-serif', 'Inter', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial']
-      }
-    },
-  },
-  plugins: [],
-}
-export default config
-
-// FILE: .env.example
-# Put your live ticketing URL here (POSH, Eventbrite, etc.)
-TICKETS_URL=https://example.com/your-ticket-link
-
-// FILE: app/globals.css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root { color-scheme: dark; }
-
-html, body, #__next { height: 100%; }
-
-body { @apply bg-bg text-white antialiased; }
-
-/* Focus styles */
-:focus-visible { outline: 2px dashed theme('colors.accent-2'); outline-offset: 3px; }
-
-/* Subtle ambient hero backdrop */
-.hero-ambient { @apply relative overflow-hidden; }
-.hero-ambient::before {
-  content: '';
-  position: absolute; inset: -20%;
-  background: radial-gradient(circle at 20% 20%, rgba(255,45,149,.15), transparent 35%),
-              radial-gradient(circle at 80% 20%, rgba(0,229,255,.12), transparent 35%),
-              radial-gradient(circle at 50% 80%, rgba(138,43,226,.18), transparent 40%);
-  filter: blur(40px);
-  z-index: 0;
-}
-
-/* Simple neon border */
-.neon-border { box-shadow: 0 0 0 1px rgba(255,255,255,0.06), inset 0 0 32px rgba(138,43,226,0.15); }
-
-// FILE: app/robots.txt
-User-agent: *
-Allow: /
-Sitemap: https://example.com/sitemap.xml
-
-// FILE: app/sitemap.xml/route.ts
-import { NextResponse } from 'next/server'
-
-export async function GET() {
-  const base = 'https://example.com'
-  const urls = ['', '/events', '/about', '/faq', '/tickets']
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-    .map((u) => `<url><loc>${base}${u}</loc></url>`)
-    .join('\n')}
-</urlset>`
-  return new NextResponse(xml, { headers: { 'Content-Type': 'application/xml' } })
-}
-
-// FILE: app/layout.tsx
-import type { Metadata } from 'next'
-import './globals.css'
-import { NavBar } from '@/components/NavBar'
-import { Footer } from '@/components/Footer'
-
-export const metadata: Metadata = {
-  title: 'Off The Record — Nightlife Series',
-  description: 'An exclusive nightlife event every 6 weeks. Only two more this year.',
-  openGraph: {
-    title: 'Off The Record',
-    description: 'Exclusive nightlife series — blink and you’ll miss it.',
-    type: 'website'
-  },
-}
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        <a href="#content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 bg-black/70 px-3 py-2 rounded">Skip to content</a>
-        <NavBar />
-        <main id="content" className="min-h-[70vh] pt-20">{children}</main>
-        <Footer />
-      </body>
-    </html>
-  )
-}
-
-// FILE: lib/events.ts
-export type EventItem = {
-  id: string
-  name: string
-  date: string // ISO date
-  venue: string
-  city?: string
-  time?: string
-  genres: string[]
-  status: 'upcoming' | 'soldout' | 'past'
-  poster?: string
-}
-
-// NOTE: Replace these with real dates/venues. Only TWO events remain this year.
-export const UPCOMING_EVENTS: EventItem[] = [
-  {
-    id: 'otr-nov',
-    name: 'Off The Record',
-    date: '2025-11-08T22:00:00-05:00',
-    venue: 'Warehouse X',
-    city: 'New York, NY',
-    time: '10:00 PM',
-    genres: ['Techno', 'House'],
-    status: 'upcoming',
-    poster: '/posters/otr-nov.png',
-  },
-  {
-    id: 'otr-dec',
-    name: 'Off The Record',
-    date: '2025-12-20T22:00:00-05:00',
-    venue: 'The Foundry',
-    city: 'Brooklyn, NY',
-    time: '10:00 PM',
-    genres: ['Disco', 'House'],
-    status: 'upcoming',
-    poster: '/posters/otr-dec.png',
-  }
-]
-
-export const PAST_EVENTS: EventItem[] = [
-  {
-    id: 'otr-jul',
-    name: 'Off The Record',
-    date: '2025-07-26T22:00:00-04:00',
-    venue: 'Bunker 12',
-    city: 'New York, NY',
-    time: '10:00 PM',
-    genres: ['House'],
-    status: 'past',
-    poster: '/posters/otr-jul.png',
-  },
-  {
-    id: 'otr-sep',
-    name: 'Off The Record',
-    date: '2025-09-19T22:00:00-04:00',
-    venue: 'Terminal N',
-    city: 'New York, NY',
-    time: '10:00 PM',
-    genres: ['Techno'],
-    status: 'past',
-    poster: '/posters/otr-sep.png',
-  },
-]
-
-export function getNextEvent(): EventItem | null {
-  const upcoming = UPCOMING_EVENTS
-    .slice()
-    .sort((a, b) => +new Date(a.date) - +new Date(b.date))
-  return upcoming[0] ?? null
-}
-
-// FILE: components/Button.tsx
-import { clsx } from 'clsx'
-import Link from 'next/link'
-
-export function Button(
-  props: React.PropsWithChildren<{
-    href?: string
-    onClick?: () => void
-    variant?: 'primary' | 'secondary'
-    className?: string
-    disabled?: boolean
-    type?: 'button' | 'submit'
-  }>
-) {
-  const base = 'inline-flex items-center justify-center px-5 py-2.5 rounded-full text-sm font-medium transition shadow-glow'
-  const styles = props.variant === 'secondary'
-    ? 'bg-white/10 hover:bg-white/15 text-white border border-white/10'
-    : 'bg-accent-1/80 hover:bg-accent-1 text-white'
-
-  const el = (
-    <span className={clsx(base, styles, props.disabled && 'opacity-60 cursor-not-allowed', props.className)}>
-      {props.children}
-    </span>
-  )
-
-  if (props.href) return <Link href={props.href} aria-disabled={props.disabled}>{el}</Link>
-  return <button type={props.type ?? 'button'} onClick={props.onClick} disabled={props.disabled} className={clsx(base, styles, props.className)}>{props.children}</button>
-}
-
-// FILE: components/NavBar.tsx
-'use client'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { clsx } from 'clsx'
-
-const LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/events', label: 'Event Info' },
-  { href: '/about', label: 'About' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/tickets', label: 'Tickets' },
-]
-
-export function NavBar() {
-  const pathname = usePathname()
-  const [open, setOpen] = useState(false)
-  return (
-    <header className="fixed top-0 inset-x-0 z-50 backdrop-blur bg-black/40 border-b border-white/10">
-      <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded bg-white/10 grid place-items-center text-xs">OTR</div>
-          <span className="font-semibold tracking-wide">Off The Record</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-2">
-          {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className={clsx('px-3 py-2 rounded-md text-sm hover:bg-white/10', pathname === l.href && 'bg-white/10 text-accent-2 shadow-glow2')}>{l.label}</Link>
-          ))}
-        </nav>
-        <button className="md:hidden px-3 py-2 rounded bg-white/10" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu">Menu</button>
-      </div>
-      {open && (
-        <div id="mobile-menu" className="md:hidden border-t border-white/10 bg-black/70">
-          <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1">
-            {LINKS.map((l) => (
-              <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className={clsx('px-3 py-2 rounded text-sm hover:bg-white/10', pathname === l.href && 'bg-white/10 text-accent-2')}>{l.label}</Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </header>
-  )
-}
-
-// FILE: components/Footer.tsx
-import Link from 'next/link'
-
-export function Footer() {
-  return (
-    <footer className="mt-20 border-t border-white/10 bg-black/40">
-      <div className="mx-auto max-w-6xl px-4 py-10 grid md:grid-cols-3 gap-6">
-        <div>
-          <div className="text-sm text-white/60">An exclusive nightlife series every 6 weeks.</div>
-          <div className="mt-2 text-xs text-white/40">© {new Date().getFullYear()} Off The Record</div>
-        </div>
-        <div className="text-sm flex flex-col gap-2">
-          <Link href="/about" className="hover:text-accent-2">About</Link>
-          <Link href="/faq" className="hover:text-accent-2">FAQ</Link>
-          <Link href="/tickets" className="hover:text-accent-2">Tickets</Link>
-        </div>
-        <div className="text-sm">
-          <div className="font-medium mb-2">Follow</div>
-          <div className="flex gap-3 text-white/70">
-            <a href="#" aria-label="Instagram" className="hover:text-accent-3">Instagram</a>
-            <a href="#" aria-label="TikTok" className="hover:text-accent-3">TikTok</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  )}
-
-// FILE: components/Hero.tsx
-import { Button } from './Button'
-import { getNextEvent } from '@/lib/events'
-
-export function Hero() {
-  const next = getNextEvent()
-  return (
-    <section className="hero-ambient relative">
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-24 md:py-32 text-center">
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-          Off The Record
-        </h1>
-        <p className="mt-4 text-white/80 max-w-2xl mx-auto">
-          An exclusive nightlife series — happening once every <span className="text-accent-2 font-semibold">6 weeks</span>. Only two more shows this year.
-        </p>
-        <div className="mt-8 flex items-center justify-center gap-3">
-          <Button href="/tickets">Get Tickets</Button>
-          <Button variant="secondary" href="/events">See Next Date</Button>
-        </div>
-        {next && (
-          <div className="mt-10 text-sm text-white/70">
-            Next up: <span className="text-white font-medium">{new Date(next.date).toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</span> — {next.venue}
-          </div>
-        )}
-      </div>
-    </section>
-  )
-}
-
-// FILE: components/CountdownTimer.tsx
-'use client'
-import { useEffect, useMemo, useState } from 'react'
-
-function getRemaining(target: Date) {
-  const now = new Date().getTime()
-  const diff = +target - now
-  const clamp = (n: number) => Math.max(0, n)
-  const days = clamp(Math.floor(diff / (1000 * 60 * 60 * 24)))
-  const hours = clamp(Math.floor((diff / (1000 * 60 * 60)) % 24))
-  const minutes = clamp(Math.floor((diff / (1000 * 60)) % 60))
-  const seconds = clamp(Math.floor((diff / 1000) % 60))
-  return { diff, days, hours, minutes, seconds }
-}
-
-export default function CountdownTimer({ iso }: { iso: string }) {
-  const target = useMemo(() => new Date(iso), [iso])
-  const [{ days, hours, minutes, seconds, diff }, setState] = useState(() => ({...getRemaining(target), diff: +target - Date.now()}))
-  useEffect(() => {
-    const id = setInterval(() => setState({ ...getRemaining(target), diff: +target - Date.now() }), 1000)
-    return () => clearInterval(id)
-  }, [target])
-
-  if (diff <= 0) return <div className="text-white/80">Happening now</div>
-
-  const slot = (v: number, label: string) => (
-    <div className="px-3 py-2 rounded-lg bg-white/5 neon-border text-center min-w-[72px]">
-      <div className="text-2xl font-bold tabular-nums">{String(v).padStart(2, '0')}</div>
-      <div className="text-[11px] uppercase tracking-wide text-white/60">{label}</div>
-    </div>
-  )
-
-  return (
-    <div className="flex items-center justify-center gap-2">
-      {slot(days, 'Days')}
-      {slot(hours, 'Hours')}
-      {slot(minutes, 'Mins')}
-      {slot(seconds, 'Secs')}
-    </div>
-  )
-}
-
-// FILE: components/EventCard.tsx
-import { Button } from './Button'
-import type { EventItem } from '@/lib/events'
-
-export function EventCard({ e }: { e: EventItem }) {
-  const d = new Date(e.date)
-  return (
-    <div className="rounded-xl overflow-hidden bg-white/5 neon-border">
-      <div className="aspect-[16/9] bg-noise bg-center bg-cover" style={{ backgroundImage: `url(${e.poster ?? '/textures/noise.png'})` }} />
-      <div className="p-4 space-y-2">
-        <div className="text-xs text-white/60">{d.toLocaleDateString(undefined, { dateStyle: 'full' })} · {e.time}</div>
-        <h3 className="text-lg font-semibold">{e.name}</h3>
-        <div className="text-sm text-white/70">{e.venue}{e.city ? ` — ${e.city}` : ''}</div>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {e.genres.map((g) => (
-            <span key={g} className="text-[11px] px-2 py-1 rounded-full bg-accent-1/20 border border-accent-1/30">{g}</span>
-          ))}
-        </div>
-        <div className="pt-3">
-          <Button href="/tickets" disabled={e.status === 'soldout'}>{e.status === 'soldout' ? 'Sold Out' : 'Get Tickets'}</Button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// FILE: components/FAQ.tsx
-'use client'
-import { useState } from 'react'
-
-export function FAQItem({ q, a }: { q: string; a: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="border-b border-white/10 py-3">
-      <button className="w-full text-left flex items-center justify-between" onClick={() => setOpen(!open)} aria-expanded={open}>
-        <span className="font-medium">{q}</span>
-        <span className="text-white/50">{open ? '–' : '+'}</span>
-      </button>
-      {open && <div className="mt-2 text-white/70">{a}</div>}
-    </div>
-  )
-}
-
-// FILE: app/(site)/page.tsx
-import { Hero } from '@/components/Hero'
-import CountdownTimer from '@/components/CountdownTimer'
-import { getNextEvent } from '@/lib/events'
-import { Button } from '@/components/Button'
-
-export default function HomePage() {
-  const next = getNextEvent()
-  return (
-    <div>
-      <Hero />
-      <section className="mx-auto max-w-6xl px-4 py-14">
-        <h2 className="text-xl font-semibold mb-4">Countdown to Next Event</h2>
-        <div className="flex items-center justify-between gap-6 flex-wrap bg-white/5 rounded-xl p-6 neon-border">
-          {next ? (
-            <>
-              <div className="space-y-1">
-                <div className="text-white/70 text-sm">Next up</div>
-                <div className="font-semibold">{new Date(next.date).toLocaleString(undefined, { dateStyle: 'full', timeStyle: 'short' })}</div>
-                <div className="text-white/70 text-sm">{next.venue} — {next.city}</div>
-              </div>
-              <CountdownTimer iso={next.date} />
-              <Button href="/tickets">Buy Tickets</Button>
-            </>
-          ) : (
-            <div>No upcoming events announced. Join our list to be first to know.</div>
-          )}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 pb-20">
-        <div className="bg-white/5 rounded-xl p-6 neon-border">
-          <h3 className="text-lg font-semibold">Every 6 Weeks. Only Two More This Year.</h3>
-          <p className="text-white/70 mt-2">Off The Record is intentionally rare. If you miss it, you wait another six weeks. Get on the list and move early when tickets drop.</p>
-          <div className="mt-4">
-            <Button href="/tickets">Secure Your Spot</Button>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
-}
-
-// FILE: app/(site)/events/page.tsx
-import { UPCOMING_EVENTS, PAST_EVENTS } from '@/lib/events'
-import { EventCard } from '@/components/EventCard'
-
-export const metadata = { title: 'Off The Record — Event Info' }
-
-export default function EventsPage() {
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="text-3xl font-bold">Off The Record — The Event Series</h1>
-      <p className="text-white/70 mt-2">We run once every <span className="text-accent-2 font-semibold">6 weeks</span>. Only two dates remain this year.</p>
-
-      <h2 className="text-xl font-semibold mt-8 mb-3">Upcoming</h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {UPCOMING_EVENTS.map((e) => <EventCard key={e.id} e={e} />)}
-      </div>
-
-      <details className="mt-10" open>
-        <summary className="text-lg font-semibold cursor-pointer">Past Events</summary>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-4">
-          {PAST_EVENTS.map((e) => <EventCard key={e.id} e={e} />)}
-        </div>
-      </details>
-    </div>
-  )
-}
-
-// FILE: app/(site)/about/page.tsx
-export const metadata = { title: 'About — Off The Record' }
-
-export default function AboutPage() {
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-12 space-y-6">
-      <h1 className="text-3xl font-bold">About Off The Record</h1>
-      <p className="text-white/75 max-w-2xl">Off The Record is a curated, phone-free nightlife series designed for immersion. We’d rather craft a rare, unforgettable night every six weeks than chase a weekly routine. The result is tighter curation, hungrier rooms, and a community that shows up.</p>
-
-      <div className="grid md:grid-cols-3 gap-5">
-        <div className="bg-white/5 p-5 rounded-xl neon-border">
-          <h3 className="font-semibold">Ethos</h3>
-          <p className="text-white/70 mt-2">No endless scrolling. No distractions. Eyes up, minds open.</p>
-        </div>
-        <div className="bg-white/5 p-5 rounded-xl neon-border">
-          <h3 className="font-semibold">Curation</h3>
-          <p className="text-white/70 mt-2">House, techno, disco—artists selected for energy and flow, not algorithms.</p>
-        </div>
-        <div className="bg-white/5 p-5 rounded-xl neon-border">
-          <h3 className="font-semibold">Community</h3>
-          <p className="text-white/70 mt-2">A room that listens, moves, and returns. Every six weeks, we meet again.</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// FILE: app/(site)/faq/page.tsx
-import { FAQItem } from '@/components/FAQ'
-
-export const metadata = { title: 'FAQ — Off The Record' }
-
-export default function FAQPage() {
-  return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-3xl font-bold">FAQ</h1>
-      <div className="mt-6">
-        <FAQItem q="How often is Off The Record?" a={<p>Every six weeks. Because dates are limited, tickets move quickly.</p>} />
-        <FAQItem q="Is there a phone policy?" a={<p>Yes. We encourage a phone-free floor. Capture moments outside the room.</p>} />
-        <FAQItem q="What’s the dress code?" a={<p>Express yourself. Comfortable, dance-ready shoes recommended.</p>} />
-        <FAQItem q="Are tickets refundable?" a={<p>All sales are final unless the event is canceled or rescheduled.</p>} />
-        <FAQItem q="Accessibility" a={<p>Venues vary; we aim for accessible spaces. Email us in advance for specific needs.</p>} />
-      </div>
-    </div>
-  )
-}
-
-// FILE: app/(site)/tickets/page.tsx
-import { Button } from '@/components/Button'
-
-export const metadata = { title: 'Tickets — Off The Record' }
-
-export default function TicketsPage() {
-  const url = process.env.TICKETS_URL
-  const Missing = (
-    <div className="text-white/70 text-sm">Ticket link not configured. Set <code className="bg-white/10 px-1 rounded">TICKETS_URL</code> in your environment.</div>
-  )
-
-  return (
-    <div className="mx-auto max-w-3xl px-4 py-12 space-y-6">
-      <h1 className="text-3xl font-bold">Tickets</h1>
-      <p className="text-white/75">Only two Off The Record events remain this year. Don’t wait.</p>
-
-      <div className="bg-white/5 p-6 rounded-xl neon-border space-y-4">
-        <h2 className="text-xl font-semibold">Buy Tickets</h2>
-        {url ? (
-          <>
-            {/* Embed placeholder — replace with your platform’s widget if available */}
-            <iframe title="Ticketing" className="w-full h-[520px] rounded-md bg-black" src={url as string} />
-            <div className="text-white/50 text-xs">If the embed doesn’t load, open in new tab.</div>
-            <Button href={url as string} className="w-full">Open Ticket Page</Button>
-          </>
-        ) : Missing}
-      </div>
-    </div>
-  )
-}
-
-// FILE: app/api/subscribe/route.ts
-import { NextResponse } from 'next/server'
-
-export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({}))
-  console.log('Subscribe request (mock):', body)
-  // TODO: Integrate Mailchimp/ConvertKit here.
-  return NextResponse.json({ ok: true })
-}
-
-// FILE: public/logo.svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <rect width="200" height="200" rx="24" fill="#0A0A0B"/>
-  <circle cx="100" cy="100" r="64" stroke="#8A2BE2" stroke-width="6"/>
-  <path d="M60 100h80" stroke="#00E5FF" stroke-width="6"/>
-  <path d="M100 60v80" stroke="#FF2D95" stroke-width="6"/>
-</svg>
-
-// FILE: public/textures/noise.png
-// (placeholder) — add any small noise texture PNG here
-
-// FILE: public/posters/README.txt
-Put your event posters here, e.g., otr-nov.png, otr-dec.png
-
-// FILE: next-env.d.ts
-/// <reference types="next" />
-/// <reference types="next/image-types/global" />
