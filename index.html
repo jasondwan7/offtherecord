@@ -1,77 +1,185 @@
-// FILE: package.json
-{
-"name": "off-the-record-site",
-"private": true,
-"version": "1.0.0",
-"scripts": {
-"dev": "next dev",
-"build": "next build",
-"start": "next start",
-"lint": "next lint"
-},
-"dependencies": {
-"next": "14.2.5",
-"react": "18.2.0",
-"react-dom": "18.2.0",
-"framer-motion": "11.0.10",
-"clsx": "2.1.1"
-},
-"devDependencies": {
-"typescript": "5.5.4",
-"eslint": "8.57.0",
-"eslint-config-next": "14.2.5",
-"tailwindcss": "3.4.10",
-"postcss": "8.4.47",
-"autoprefixer": "10.4.20"
-}
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OFF THE RECORD — Underground Gatherings</title>
+  <meta name="description" content="OFF THE RECORD — exclusive underground gatherings every 6 weeks. Phone‑free zones. Only 2 events remaining in 2025." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23ffffff' d='M37 2 9 36h18l-4 26 32-40H37z'/%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --bg:#0b0b10;
+      --surface:#12121a;
+      --text:#e6e6f0;
+      --muted:#a6a6b3;
+      --brand-1:#a855f7; /* purple */
+      --brand-2:#22d3ee; /* cyan */
+      --brand-3:#10b981; /* teal */
+      --ring: rgba(168,85,247,.45);
+      --outline: rgba(130, 87, 230, 0.5);
+    }
 
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif;
+      color:var(--text); background: var(--bg);
+      overflow-x:hidden;
+    }
 
+    /* Layered background: soft vignette + gradient glow + subtle dot grid */
+    .bg{position:fixed; inset:0; z-index:-2; background:
+      radial-gradient(1200px 800px at 75% 75%, rgba(18,245,227,.10), transparent 60%),
+      radial-gradient(1000px 700px at 20% 30%, rgba(168,85,247,.10), transparent 60%),
+      linear-gradient(180deg, #0b0b12 0%, #0a0a11 100%);
+    }
+    .bg::after{ /* dotted grid */
+      content:""; position:absolute; inset:0; opacity:.25; pointer-events:none; background-image:
+        radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 26px 26px; mask-image: radial-gradient(circle at 50% 0%, black 30%, transparent 75%);
+    }
 
+    header{
+      position:sticky; top:0; z-index:20; backdrop-filter:saturate(140%) blur(8px);
+      background: linear-gradient(to bottom, rgba(12,12,18,.8), rgba(12,12,18,.2));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav{max-width:1180px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:14px 20px;}
+    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:#fff; font-weight:800; letter-spacing:.2px;}
+    .bolt{width:24px; height:24px; display:grid; place-items:center;}
+    .bolt svg{filter:drop-shadow(0 2px 8px rgba(168,85,247,.35));}
 
-// FILE: next.config.mjs
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-experimental: {
-serverActions: {
-bodySizeLimit: '2mb'
-}
-}
-};
-export default nextConfig;
+    .menu{display:flex; gap:28px; align-items:center}
+    .menu a{color:var(--muted); text-decoration:none; font-weight:600; font-size:15px; position:relative}
+    .menu a:hover{color:#fff}
+    .menu a.active{color:#d8caff;}
+    .menu a.active::after{content:""; position:absolute; left:0; right:0; bottom:-10px; height:8px; width:44px; margin:auto; border-radius:8px; background:rgba(129,61,255,.25)}
 
+    .container{max-width:1180px; padding:0 20px; margin:0 auto}
 
+    .hero{min-height:calc(100vh - 72px); display:grid; place-items:center; text-align:center; position:relative}
+    .hero-inner{margin-top:-40px}
+    h1{font-weight:900; font-size:clamp(42px, 8vw, 124px); line-height:.9; margin:0 0 18px}
+    .gradient{
+      background: linear-gradient(90deg, var(--brand-1) 0%, #e9a3ff 30%, #93c5fd 55%, var(--brand-2) 73%, #00e0b8 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      filter: drop-shadow(0 10px 60px rgba(34,211,238,.15));
+    }
+    .subtitle{max-width:860px; margin:0 auto 36px; color:#c9c9d6; font-size:clamp(16px, 2.2vw, 26px); line-height:1.5}
 
+    .cta{display:flex; gap:18px; justify-content:center; flex-wrap:wrap}
+    .btn{border:0; padding:16px 26px; font-weight:800; font-size:16px; border-radius:14px; cursor:pointer; transition:transform .08s ease, box-shadow .2s ease, background .2s ease, color .2s ease}
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{color:#fff; background:linear-gradient(90deg, var(--brand-1), #ff4d8d 50%, #ff6bbb 60%, var(--brand-2)); box-shadow:0 10px 24px rgba(168,85,247,.35), inset 0 0 0 1px rgba(255,255,255,.08)}
+    .btn-primary:hover{box-shadow:0 14px 36px rgba(168,85,247,.45), inset 0 0 0 1px rgba(255,255,255,.14)}
+    .btn-outline{color:#cbb8ff; background:transparent; border:1px solid rgba(168,85,247,.45)}
+    .btn-outline:hover{border-color:#c59cff; color:#fff; box-shadow:0 10px 28px rgba(168,85,247,.25)}
 
-// FILE: tsconfig.json
-{
-"compilerOptions": {
-"target": "ES2021",
-"lib": ["dom", "dom.iterable", "esnext"],
-"allowJs": false,
-"skipLibCheck": true,
-"strict": true,
-"noEmit": true,
-"esModuleInterop": true,
-"module": "esnext",
-"moduleResolution": "bundler",
-"resolveJsonModule": true,
-"isolatedModules": true,
-"jsx": "preserve",
-"incremental": true,
-"paths": {"@/*": ["./*"]}
-},
-"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-"exclude": ["node_modules"]
-}
+    /* Tiny glowing cursor accent */
+    .cursor-glow{position:fixed; width:220px; height:220px; pointer-events:none; border-radius:50%; background:radial-gradient(circle, rgba(96,165,250,.18), rgba(168,85,247,.12) 40%, transparent 70%); filter:blur(18px); mix-blend-mode:screen; z-index:-1}
 
+    /* Footer badge */
+    .made-in{position:fixed; right:16px; bottom:16px; background:#0f0f16; border:1px solid rgba(255,255,255,.08); color:#c9c9d6; border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:10px; font-weight:700; font-size:13px; opacity:.85}
+    .made-in img{width:16px; height:16px; filter:invert(1) opacity(.9)}
 
+    /* Basic sections for nav anchors (placeholders) */
+    section{padding:100px 0; border-top:1px solid rgba(255,255,255,.06); background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(255,255,255,.01) 70%, rgba(0,0,0,0));}
+    section h2{font-size:42px; margin:0 0 12px}
+    section p{color:#bcbcd0; font-size:18px; max-width:760px}
 
+    @media (max-width:640px){
+      .menu{gap:18px}
+      .menu a.active::after{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="cursor-glow" id="glow" aria-hidden="true"></div>
 
-// FILE: postcss.config.js
-module.exports = {
-plugins: {
-tailwindcss: {},
-autoprefixer: {},
-},
-};
+  <header>
+    <nav class="nav">
+      <a class="brand" href="#home" aria-label="Off The Record home">
+        <span class="bolt" aria-hidden="true">
+          <!-- Lightning glyph -->
+          <svg width="24" height="24" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M37 2 9 36h18l-4 26 32-40H37z" fill="url(#g)"/>
+            <defs>
+              <linearGradient id="g" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#a855f7"/>
+                <stop offset="1" stop-color="#22d3ee"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span>OFF THE RECORD</span>
+      </a>
+      <div class="menu">
+        <a class="active" href="#home">Home</a>
+        <a href="#events">Events</a>
+        <a href="#about">About</a>
+        <a href="#faq">FAQ</a>
+        <a href="#tickets">Tickets</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home" class="hero">
+    <div class="hero-inner container">
+      <h1 class="gradient">OFF THE RECORD</h1>
+      <p class="subtitle">Exclusive underground gatherings every 6 weeks. Phone‑free zones. Only <strong>2</strong> events remaining in 2025.</p>
+      <div class="cta">
+        <a href="#events" class="btn btn-primary">View Events →</a>
+        <a href="#tickets" class="btn btn-outline">Buy Tickets</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Placeholder sections you can replace with real content -->
+  <section id="events" class="container">
+    <h2>Events</h2>
+    <p>Drop your upcoming dates, locations, and set times here. You can embed a ticketing widget or keep the CTA buttons above linked to your provider.</p>
+  </section>
+  <section id="about" class="container">
+    <h2>About</h2>
+    <p>OFF THE RECORD is a phone‑free, vibe‑first series running roughly every six weeks. Think low‑light, high‑energy, all community. Replace this copy with your brand story and values.</p>
+  </section>
+  <section id="faq" class="container">
+    <h2>FAQ</h2>
+    <p>Answer common questions: dress code, door policy, photography rules, refunds, accessibility, etc.</p>
+  </section>
+  <section id="tickets" class="container">
+    <h2>Tickets</h2>
+    <p>Link this section to your Stripe/Shopify/Eventbrite checkout or embed directly.</p>
+  </section>
+
+  <a class="made-in" href="#" onclick="return false;" aria-label="Badge">
+    <img alt="b" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M4 4h10a6 6 0 1 1 0 12H8v4H4zM8 8v4h6a2 2 0 1 0 0-4z'/%3E%3C/svg%3E"> Made in Bolt
+  </a>
+
+  <script>
+    // Simple interactive glow that follows the cursor (performance-friendly)
+    const glow = document.getElementById('glow');
+    let x = window.innerWidth/2, y = window.innerHeight/2;
+    document.addEventListener('pointermove', (e)=>{ x=e.clientX; y=e.clientY; });
+    function animate(){
+      glow.style.transform = `translate(${x-110}px, ${y-110}px)`; // center the 220px glow
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Smooth‑scroll for same‑page anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const id = a.getAttribute('href');
+        if(id.length > 1){
+          e.preventDefault();
+          document.querySelector(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      });
+    });
+  </script>
+</body>
+</html>
