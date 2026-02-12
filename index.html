@@ -1,320 +1,312 @@
-// ===============================
-// Off The Record — simple site JS
-// ===============================
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Off The Record — Events</title>
+    <meta name="description" content="Off The Record — phone-free, present-moment events. Tickets, upcoming dates, and RSVP." />
 
-// 1) Set your ticket link here (Posh/Dice/Eventbrite/etc.)
-const TICKETS_URL = "https://example.com/your-ticket-link";
+    <!-- Social preview (edit as needed) -->
+    <meta property="og:title" content="Off The Record — Events" />
+    <meta property="og:description" content="Phone-free nights. Real conversations. Music + cocktails." />
+    <meta property="og:image" content="assets/otr-logo.png" />
+    <meta property="og:type" content="website" />
 
-// 2) Edit your events here
-// Use ISO date strings so countdown works: YYYY-MM-DDTHH:mm:ss (local time)
-const EVENTS = [
-  {
-    title: "OTR: The No-Phone Session",
-    dateTime: "2026-03-06T21:30:00",
-    venue: "Location Revealed Day-Of",
-    city: "New York",
-    theme: "Cocktails + House",
-    tickets: TICKETS_URL,
-    status: "Limited"
-  },
-  {
-    title: "OTR: Midnight Social",
-    dateTime: "2026-03-20T22:00:00",
-    venue: "Lower Manhattan",
-    city: "New York",
-    theme: "Disco / Edits",
-    tickets: TICKETS_URL,
-    status: "Waitlist"
-  },
-  {
-    title: "OTR: After Hours",
-    dateTime: "2026-04-03T23:00:00",
-    venue: "Brooklyn",
-    city: "New York",
-    theme: "Dark Grooves",
-    tickets: TICKETS_URL,
-    status: "On Sale"
-  }
-];
+    <link rel="icon" href="assets/otr-logo.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-const $ = (sel) => document.querySelector(sel);
-const $$ = (sel) => document.querySelectorAll(sel);
+  <body>
+    <!-- Background glow blobs -->
+    <div class="bg-glow" aria-hidden="true">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="grain"></div>
+    </div>
 
-function formatDate(dt) {
-  const d = new Date(dt);
-  // Example: Fri, Mar 6
-  return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
-}
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="#top" aria-label="Off The Record home">
+          <img class="brand-logo" src="assets/otr-logo.png" alt="Off The Record logo" />
+          <div class="brand-text">
+            <span class="brand-name">OFF THE RECORD</span>
+            <span class="brand-tag">Phone-free events • NYC</span>
+          </div>
+        </a>
 
-function formatTime(dt) {
-  const d = new Date(dt);
-  return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-}
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="hamburger"></span>
+        </button>
 
-function daysUntil(dt) {
-  const now = new Date();
-  const target = new Date(dt);
-  const ms = target.getTime() - now.getTime();
-  return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
-}
+        <div class="nav-links" id="navLinks">
+          <a href="#events">Events</a>
+          <a href="#about">About</a>
+          <a href="#rules">Rules</a>
+          <a href="#subscribe">Updates</a>
+          <a class="btn btn-small btn-primary" href="#tickets">Tickets</a>
+        </div>
+      </nav>
+    </header>
 
-function getUpcomingEvents() {
-  const now = new Date().getTime();
-  return EVENTS
-    .slice()
-    .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime))
-    .filter((e) => new Date(e.dateTime).getTime() >= now);
-}
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="pill">
+              <span class="dot"></span>
+              <span>Invite-only vibes • Limited capacity</span>
+            </div>
 
-function renderCityFilter(events) {
-  const cities = Array.from(new Set(events.map((e) => e.city))).sort();
-  const select = $("#cityFilter");
-  for (const c of cities) {
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.textContent = c;
-    select.appendChild(opt);
-  }
-}
+            <h1>
+              Put the phone away.
+              <span class="accent">Live the night.</span>
+            </h1>
 
-function eventCard(event) {
-  const el = document.createElement("article");
-  el.className = "event-card";
+            <p class="lead">
+              <strong>Off The Record</strong> is a present-moment cocktail + music experience.
+              No cameras. No screens. Just the room, the sound, and the people.
+            </p>
 
-  const top = document.createElement("div");
-  top.className = "event-top";
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#events">See upcoming events</a>
+              <a class="btn btn-ghost" href="#rules">Phone-free policy</a>
+            </div>
 
-  const badge = document.createElement("span");
-  badge.className = "badge";
-  badge.textContent = event.status.toUpperCase();
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-num" id="countdownDays">—</span>
+                <span class="stat-label">Days to next event</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num">NYC</span>
+                <span class="stat-label">Location</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num">OTR</span>
+                <span class="stat-label">Members-only energy</span>
+              </div>
+            </div>
+          </div>
 
-  const date = document.createElement("span");
-  date.className = "event-date";
-  date.textContent = `${formatDate(event.dateTime)} • ${formatTime(event.dateTime)}`;
+          <div class="hero-right" aria-hidden="true">
+            <div class="logo-card">
+              <img src="assets/otr-logo.png" alt="" />
+              <div class="logo-glow"></div>
+            </div>
 
-  top.appendChild(badge);
-  top.appendChild(date);
+            <div class="floating-card">
+              <div class="fc-top">
+                <span class="badge">NEXT UP</span>
+                <span class="muted" id="nextEventDate">—</span>
+              </div>
+              <div class="fc-title" id="nextEventTitle">Loading…</div>
+              <div class="fc-meta">
+                <span id="nextEventVenue">—</span>
+                <span class="sep">•</span>
+                <span id="nextEventCity">—</span>
+              </div>
+              <a class="btn btn-small btn-primary" href="#tickets">Get tickets</a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  const title = document.createElement("div");
-  title.className = "event-title";
-  title.textContent = event.title;
+      <!-- EVENTS -->
+      <section class="section" id="events">
+        <div class="container">
+          <div class="section-head">
+            <h2>Upcoming events</h2>
+            <div class="section-actions">
+              <input class="search" id="searchInput" type="search" placeholder="Search (venue, city, theme…)" />
+              <select class="select" id="cityFilter">
+                <option value="all">All cities</option>
+              </select>
+            </div>
+          </div>
 
-  const meta = document.createElement("div");
-  meta.className = "event-meta";
-  meta.textContent = `${event.venue} • ${event.city} • ${event.theme}`;
+          <div class="grid" id="eventsGrid" aria-live="polite"></div>
 
-  const actions = document.createElement("div");
-  actions.className = "event-actions";
+          <div class="note">
+            <strong>Heads up:</strong> times/venues can be revealed closer to the date. Keep notifications on.
+          </div>
+        </div>
+      </section>
 
-  const t1 = document.createElement("span");
-  t1.className = "tag";
-  t1.textContent = "Phone-free";
+      <!-- TICKETS -->
+      <section class="section" id="tickets">
+        <div class="container">
+          <div class="tickets">
+            <div class="tickets-left">
+              <h2>Tickets</h2>
+              <p class="muted">
+                Link this button to Posh, Dice, Eventbrite, a Stripe Checkout link — whatever you use.
+              </p>
+              <div class="ticket-actions">
+                <a class="btn btn-primary" id="ticketsLink" href="#" target="_blank" rel="noopener noreferrer">
+                  Open ticket link
+                </a>
+                <button class="btn btn-ghost" id="copyLinkBtn">Copy ticket link</button>
+              </div>
+              <p class="tiny muted">
+                Set your ticket URL inside <code>script.js</code> → <code>TICKETS_URL</code>.
+              </p>
+            </div>
 
-  const t2 = document.createElement("a");
-  t2.className = "btn btn-small btn-primary";
-  t2.href = event.tickets || TICKETS_URL;
-  t2.target = "_blank";
-  t2.rel = "noopener noreferrer";
-  t2.textContent = "Tickets";
+            <div class="tickets-right">
+              <div class="ticket-card">
+                <div class="ticket-card-top">
+                  <span class="badge">OTR POLICY</span>
+                  <span class="muted">Respect the room</span>
+                </div>
+                <ul class="checklist">
+                  <li>No photos / no video</li>
+                  <li>Phone stickers or pouch at entry</li>
+                  <li>Be present • be respectful</li>
+                  <li>Good energy only</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  const t3 = document.createElement("button");
-  t3.className = "btn btn-small btn-ghost";
-  t3.type = "button";
-  t3.textContent = "Add to calendar";
-  t3.addEventListener("click", () => downloadICS(event));
+      <!-- ABOUT -->
+      <section class="section" id="about">
+        <div class="container">
+          <div class="about">
+            <div>
+              <h2>What is Off The Record?</h2>
+              <p class="lead">
+                A modern nightlife concept built around <strong>presence</strong>.
+                The music hits harder, the conversations get real, and the room feels electric — because nobody’s performing for a screen.
+              </p>
+              <div class="about-cards">
+                <div class="card">
+                  <h3>Cocktails</h3>
+                  <p class="muted">Seasonal menus, bold flavors, zero fluff.</p>
+                </div>
+                <div class="card">
+                  <h3>Music</h3>
+                  <p class="muted">Curated sets: warm-up → peak-time → afterglow.</p>
+                </div>
+                <div class="card">
+                  <h3>Energy</h3>
+                  <p class="muted">Small crowd, big vibe. Limited capacity always.</p>
+                </div>
+              </div>
+            </div>
 
-  actions.appendChild(t1);
-  actions.appendChild(t2);
-  actions.appendChild(t3);
+            <div class="poster">
+              <div class="poster-inner">
+                <div class="poster-head">
+                  <span class="badge">OFF THE RECORD</span>
+                  <span class="muted">EST. NYC</span>
+                </div>
+                <div class="poster-title">A night you don’t post.</div>
+                <div class="poster-sub">A night you actually remember.</div>
+                <div class="poster-footer">
+                  <img src="assets/otr-logo.png" alt="" />
+                  <span class="muted">#OTR</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  el.appendChild(top);
-  el.appendChild(title);
-  el.appendChild(meta);
-  el.appendChild(actions);
+      <!-- RULES -->
+      <section class="section" id="rules">
+        <div class="container">
+          <div class="rules">
+            <h2>Phone-free policy</h2>
+            <p class="muted">
+              This is the whole point. We want the room to feel safe, alive, and off the internet.
+            </p>
 
-  return el;
-}
+            <div class="rules-grid">
+              <div class="rule">
+                <div class="rule-num">01</div>
+                <div>
+                  <h3>No photos / no video</h3>
+                  <p class="muted">If it happens here, it stays here.</p>
+                </div>
+              </div>
+              <div class="rule">
+                <div class="rule-num">02</div>
+                <div>
+                  <h3>Phones away</h3>
+                  <p class="muted">Stickers/pouches at entry. Step out if you need to use it.</p>
+                </div>
+              </div>
+              <div class="rule">
+                <div class="rule-num">03</div>
+                <div>
+                  <h3>Respect the vibe</h3>
+                  <p class="muted">No harassment, no weirdness, no drama.</p>
+                </div>
+              </div>
+              <div class="rule">
+                <div class="rule-num">04</div>
+                <div>
+                  <h3>Consent & discretion</h3>
+                  <p class="muted">Keep it classy. Keep it confidential.</p>
+                </div>
+              </div>
+            </div>
 
-// Simple ICS generator (works for Google/Apple/Outlook import)
-function downloadICS(event) {
-  const start = new Date(event.dateTime);
-  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // 2 hours default
-  const toICS = (d) =>
-    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+            <div class="callout">
+              <strong>Tip:</strong> Want this to feel more exclusive? Replace “NYC” with a “Location revealed day-of” line on event cards.
+            </div>
+          </div>
+        </div>
+      </section>
 
-  const ics =
-`BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Off The Record//OTR Events//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-UID:${cryptoRandomId()}@offtherecord
-DTSTAMP:${toICS(new Date())}
-DTSTART:${toICS(start)}
-DTEND:${toICS(end)}
-SUMMARY:${escapeICS(event.title)}
-LOCATION:${escapeICS(`${event.venue}, ${event.city}`)}
-DESCRIPTION:${escapeICS(`Phone-free event. Tickets: ${event.tickets || TICKETS_URL}`)}
-END:VEVENT
-END:VCALENDAR`;
+      <!-- SUBSCRIBE -->
+      <section class="section" id="subscribe">
+        <div class="container">
+          <div class="subscribe">
+            <div>
+              <h2>Get updates</h2>
+              <p class="muted">
+                Drop your email for event drops. (This demo form stores locally — connect Mailchimp/Klaviyo later.)
+              </p>
+            </div>
 
-  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+            <form class="subscribe-form" id="subscribeForm">
+              <label class="sr-only" for="emailInput">Email address</label>
+              <input id="emailInput" class="input" type="email" placeholder="you@domain.com" required />
+              <button class="btn btn-primary" type="submit">Join list</button>
+            </form>
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${event.title.replace(/[^\w]+/g, "-").toLowerCase()}.ics`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
+            <p class="tiny muted" id="subscribeMsg" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+    </main>
 
-function escapeICS(str) {
-  return String(str || "")
-    .replace(/\\/g, "\\\\")
-    .replace(/\n/g, "\\n")
-    .replace(/,/g, "\\,")
-    .replace(/;/g, "\\;");
-}
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-left">
+          <img class="footer-logo" src="assets/otr-logo.png" alt="Off The Record logo" />
+          <div>
+            <div class="footer-brand">OFF THE RECORD</div>
+            <div class="tiny muted">Phone-free nightlife • NYC</div>
+          </div>
+        </div>
 
-function cryptoRandomId() {
-  try {
-    const arr = new Uint32Array(4);
-    window.crypto.getRandomValues(arr);
-    return Array.from(arr).map(n => n.toString(16)).join("");
-  } catch {
-    return String(Math.random()).slice(2);
-  }
-}
+        <div class="footer-right">
+          <a href="#events">Events</a>
+          <a href="#rules">Policy</a>
+          <a href="#subscribe">Updates</a>
+          <a href="#top">Top</a>
+        </div>
+      </div>
+      <div class="tiny muted footer-bottom">© <span id="year"></span> Off The Record. All rights reserved.</div>
+    </footer>
 
-function renderEvents(events) {
-  const grid = $("#eventsGrid");
-  grid.innerHTML = "";
-
-  if (!events.length) {
-    const empty = document.createElement("div");
-    empty.className = "note";
-    empty.textContent = "No events match your filters yet. Check back soon.";
-    grid.appendChild(empty);
-    return;
-  }
-
-  events.forEach((e) => grid.appendChild(eventCard(e)));
-}
-
-function wireNav() {
-  const btn = $("#navToggle");
-  const links = $("#navLinks");
-  if (!btn || !links) return;
-
-  btn.addEventListener("click", () => {
-    const open = links.classList.toggle("open");
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
-  });
-
-  // close on click
-  links.querySelectorAll("a").forEach((a) => {
-    a.addEventListener("click", () => {
-      links.classList.remove("open");
-      btn.setAttribute("aria-expanded", "false");
-    });
-  });
-}
-
-function wireTickets() {
-  const a = $("#ticketsLink");
-  if (a) a.href = TICKETS_URL;
-
-  const copyBtn = $("#copyLinkBtn");
-  if (copyBtn) {
-    copyBtn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(TICKETS_URL);
-        copyBtn.textContent = "Copied!";
-        setTimeout(() => (copyBtn.textContent = "Copy ticket link"), 1200);
-      } catch {
-        alert("Copy failed — paste this manually: " + TICKETS_URL);
-      }
-    });
-  }
-}
-
-function wireSubscribe() {
-  const form = $("#subscribeForm");
-  const msg = $("#subscribeMsg");
-  if (!form || !msg) return;
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = $("#emailInput").value.trim().toLowerCase();
-    if (!email) return;
-
-    // Demo: store locally
-    const key = "otr_subscribers";
-    const list = JSON.parse(localStorage.getItem(key) || "[]");
-    if (!list.includes(email)) list.push(email);
-    localStorage.setItem(key, JSON.stringify(list));
-
-    msg.textContent = "You’re in. Watch for drops (and keep it off the record).";
-    form.reset();
-  });
-}
-
-function setNextEventHero(upcoming) {
-  const next = upcoming[0];
-  if (!next) {
-    $("#nextEventTitle").textContent = "New drops soon";
-    $("#nextEventDate").textContent = "—";
-    $("#nextEventVenue").textContent = "NYC";
-    $("#nextEventCity").textContent = "—";
-    $("#countdownDays").textContent = "—";
-    return;
-  }
-
-  $("#nextEventTitle").textContent = next.title;
-  $("#nextEventDate").textContent = `${formatDate(next.dateTime)} • ${formatTime(next.dateTime)}`;
-  $("#nextEventVenue").textContent = next.venue;
-  $("#nextEventCity").textContent = next.city;
-  $("#countdownDays").textContent = String(daysUntil(next.dateTime));
-}
-
-function wireFilters(allUpcoming) {
-  const search = $("#searchInput");
-  const city = $("#cityFilter");
-
-  const apply = () => {
-    const q = (search.value || "").trim().toLowerCase();
-    const c = city.value;
-
-    const filtered = allUpcoming.filter((e) => {
-      const hay = `${e.title} ${e.venue} ${e.city} ${e.theme} ${e.status}`.toLowerCase();
-      const okQuery = !q || hay.includes(q);
-      const okCity = c === "all" || e.city === c;
-      return okQuery && okCity;
-    });
-
-    renderEvents(filtered);
-  };
-
-  search.addEventListener("input", apply);
-  city.addEventListener("change", apply);
-  apply();
-}
-
-function init() {
-  $("#year").textContent = String(new Date().getFullYear());
-
-  wireNav();
-  wireTickets();
-  wireSubscribe();
-
-  const upcoming = getUpcomingEvents();
-  setNextEventHero(upcoming);
-
-  renderCityFilter(upcoming);
-  wireFilters(upcoming);
-}
-
-document.addEventListener("DOMContentLoaded", init);
+    <script src="script.js"></script>
+  </body>
+</html>
