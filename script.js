@@ -313,3 +313,13 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+/* Subtle luxury pulse for primary buttons */
+.btn-primary {
+  animation: otrPulse 3.8s ease-in-out infinite;
+}
+
+@keyframes otrPulse {
+  0%, 100% { filter: brightness(1); transform: translateY(0); }
+  50% { filter: brightness(1.08); transform: translateY(-1px); }
+}
+
