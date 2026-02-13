@@ -208,31 +208,18 @@ function wireSubscribe() {
   });
 }
 
-function setNextEventHero(upcoming) {
-  const next = upcoming[0];
-
+function setNextEventHero() {
   const titleEl = $("#nextEventTitle");
   const dateEl = $("#nextEventDate");
   const venueEl = $("#nextEventVenue");
   const cityEl = $("#nextEventCity");
   const daysEl = $("#countdownDays");
 
-  if (!titleEl || !dateEl || !venueEl || !cityEl || !daysEl) return;
-
-  if (!next) {
-    titleEl.textContent = "New drops soon";
-    dateEl.textContent = "—";
-    venueEl.textContent = "NYC";
-    cityEl.textContent = "—";
-    daysEl.textContent = "—";
-    return;
-  }
-
-  titleEl.textContent = next.title;
-  dateEl.textContent = `${formatDate(next.dateTime)} • ${formatTime(next.dateTime)}`;
-  venueEl.textContent = next.venue;
-  cityEl.textContent = next.city;
-  daysEl.textContent = String(daysUntil(next.dateTime));
+  if (titleEl) titleEl.textContent = "Next event coming soon";
+  if (dateEl) dateEl.textContent = "";
+  if (venueEl) venueEl.textContent = "";
+  if (cityEl) cityEl.textContent = "";
+  if (daysEl) daysEl.textContent = "Next event coming soon";
 }
 
 function wireFilters(allUpcoming) {
@@ -322,11 +309,7 @@ function init() {
   wireTickets();
   wireSubscribe();
 
-  const upcoming = getUpcomingEvents();
-  setNextEventHero(upcoming);
-
-  renderCityFilter(upcoming);
-  wireFilters(upcoming);
+  setNextEventHero();
 }
 
 document.addEventListener("DOMContentLoaded", init);
