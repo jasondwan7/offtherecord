@@ -371,23 +371,23 @@ footer {
     font-size: 36px;
   }
 }
-/* Subtle luxury pulse */
-.btn-primary {
-  animation: otrPulse 3.8s ease-in-out infinite !important;
-  will-change: transform, filter;
+/* OTR pulse — force apply to primary CTA */
+.btn.btn-primary,
+a.btn.btn-primary,
+button.btn.btn-primary {
+  animation: otrPulse 1.6s ease-in-out infinite !important;
+  will-change: transform, filter, box-shadow;
 }
 
 @keyframes otrPulse {
-  0%, 100% { transform: translateY(0); filter: brightness(1); }
-  50%      { transform: translateY(-1px); filter: brightness(1.08); }
-}
-/* Subtle luxury pulse */
-.btn-primary {
-  animation: otrPulse 3.8s ease-in-out infinite !important;
-  will-change: transform, filter;
-}
-
-@keyframes otrPulse {
-  0%, 100% { transform: translateY(0); filter: brightness(1); }
-  50%      { transform: translateY(-1px); filter: brightness(1.08); }
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.35), 0 0 0 rgba(255,79,163,0);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.18);
+    box-shadow: 0 16px 42px rgba(0,0,0,0.45), 0 0 26px rgba(255,79,163,0.35);
+  }
 }
