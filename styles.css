@@ -375,7 +375,7 @@ footer {
 .btn.btn-primary,
 a.btn.btn-primary,
 button.btn.btn-primary {
-  animation: otrPulse 3.8s ease-in-out infinite !important;
+  animation: otrPulse 1.8s ease-in-out infinite !important;
   will-change: transform, filter;
 }
 
